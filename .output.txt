@@ -1,0 +1,279 @@
+origin  https://github.com/ersss228/sdp2.git (fetch)
+origin  https://github.com/ersss228/sdp2.git (push)
+AM asik2/src/bridge/Circle.java
+AM asik2/src/bridge/Main.java
+AM asik2/src/bridge/RasterRenderer.java
+AM asik2/src/bridge/Renderer.java
+AM asik2/src/bridge/Shape.java
+AM asik2/src/bridge/Square.java
+AM asik2/src/bridge/VectorRenderer.java
+main
+Lenovo
+252751@astanait.edu.kz
+https://github.com/ersss228/sdp2.git
+diff --git a/asik2/src/bridge/Circle.java b/asik2/src/bridge/Circle.java
+new file mode 100644
+index 0000000..c6743e8
+--- /dev/null
++++ b/asik2/src/bridge/Circle.java
+@@ -0,0 +1,4 @@
++package bridge;
++
++public class Circle {
++}
+diff --git a/asik2/src/bridge/Main.java b/asik2/src/bridge/Main.java
+new file mode 100644
+index 0000000..25cb9c4
+--- /dev/null
++++ b/asik2/src/bridge/Main.java
+@@ -0,0 +1,4 @@
++package bridge;
++
++public class Main {
++}
+diff --git a/asik2/src/bridge/RasterRenderer.java b/asik2/src/bridge/RasterRenderer.java
+new file mode 100644
+index 0000000..f052907
+--- /dev/null
++++ b/asik2/src/bridge/RasterRenderer.java
+@@ -0,0 +1,4 @@
++package bridge;
++
++public class RasterRenderer {
++}
+diff --git a/asik2/src/bridge/Renderer.java b/asik2/src/bridge/Renderer.java
+new file mode 100644
+index 0000000..77e6947
+--- /dev/null
++++ b/asik2/src/bridge/Renderer.java
+@@ -0,0 +1,4 @@
++package bridge;
++
++public class Renderer {
++}
+diff --git a/asik2/src/bridge/Shape.java b/asik2/src/bridge/Shape.java
+new file mode 100644
+index 0000000..0b250e5
+--- /dev/null
++++ b/asik2/src/bridge/Shape.java
+@@ -0,0 +1,4 @@
++package bridge;
++
++public class Shape {
++}
+diff --git a/asik2/src/bridge/Square.java b/asik2/src/bridge/Square.java
+new file mode 100644
+index 0000000..a465d9c
+--- /dev/null
++++ b/asik2/src/bridge/Square.java
+@@ -0,0 +1,4 @@
++package bridge;
++
++public class Square {
++}
+diff --git a/asik2/src/bridge/VectorRenderer.java b/asik2/src/bridge/VectorRenderer.java
+new file mode 100644
+index 0000000..7df5488
+--- /dev/null
++++ b/asik2/src/bridge/VectorRenderer.java
+@@ -0,0 +1,4 @@
++package bridge;
++
++public class VectorRenderer {
++}
+diff --git a/asik2/src/bridge/Circle.java b/asik2/src/bridge/Circle.java
+index c6743e8..46d751f 100644
+--- a/asik2/src/bridge/Circle.java
++++ b/asik2/src/bridge/Circle.java
+@@ -1,4 +1,16 @@
+ package bridge;
+
+-public class Circle {
++public class Circle extends Shape {
++
++  private double radius;
++
++  public Circle(Renderer renderer, double radius) {
++    super(renderer);
++    this.radius = radius;
++  }
++
++  @Override
++  public void draw() {
++    renderer.renderCircle(radius);
++  }
+ }
+diff --git a/asik2/src/bridge/Main.java b/asik2/src/bridge/Main.java
+index 25cb9c4..b9d9466 100644
+--- a/asik2/src/bridge/Main.java
++++ b/asik2/src/bridge/Main.java
+@@ -1,4 +1,23 @@
+ package bridge;
+
+ public class Main {
++  public static void main(String[] args) {
++
++    Renderer vectorRenderer = new VectorRenderer();
++    Renderer rasterRenderer = new RasterRenderer();
++
++    Shape circle = new Circle(vectorRenderer, 5);
++    Shape square = new Square(vectorRenderer, 10);
++
++    circle.draw();
++    square.draw();
++
++    System.out.println("--- Switching Renderer ---");
++
++    circle.setRenderer(rasterRenderer);
++    square.setRenderer(rasterRenderer);
++
++    circle.draw();
++    square.draw();
++  }
+ }
+diff --git a/asik2/src/bridge/RasterRenderer.java b/asik2/src/bridge/RasterRenderer.java
+index f052907..45f3f78 100644
+--- a/asik2/src/bridge/RasterRenderer.java
++++ b/asik2/src/bridge/RasterRenderer.java
+@@ -1,4 +1,14 @@
+ package bridge;
+
+-public class RasterRenderer {
++public class RasterRenderer implements Renderer {
++
++  @Override
++  public void renderCircle(double radius) {
++    System.out.println("Drawing circle as raster, radius: " + radius);
++  }
++
++  @Override
++  public void renderSquare(double side) {
++    System.out.println("Drawing square as raster, side: " + side);
++  }
+ }
+diff --git a/asik2/src/bridge/Renderer.java b/asik2/src/bridge/Renderer.java
+index 77e6947..15f69dc 100644
+--- a/asik2/src/bridge/Renderer.java
++++ b/asik2/src/bridge/Renderer.java
+@@ -1,4 +1,6 @@
+ package bridge;
+
+-public class Renderer {
++public interface Renderer {
++  void renderCircle(double radius);
++  void renderSquare(double side);
+ }
+diff --git a/asik2/src/bridge/Shape.java b/asik2/src/bridge/Shape.java
+index 0b250e5..594be1f 100644
+--- a/asik2/src/bridge/Shape.java
++++ b/asik2/src/bridge/Shape.java
+@@ -1,4 +1,16 @@
+ package bridge;
+
+-public class Shape {
++public abstract class Shape {
++
++  protected Renderer renderer;
++
++  public Shape(Renderer renderer) {
++    this.renderer = renderer;
++  }
++
++  public abstract void draw();
++
++  public void setRenderer(Renderer renderer) {
++    this.renderer = renderer;
++  }
+ }
+diff --git a/asik2/src/bridge/Square.java b/asik2/src/bridge/Square.java
+index a465d9c..11fa545 100644
+--- a/asik2/src/bridge/Square.java
++++ b/asik2/src/bridge/Square.java
+@@ -1,4 +1,16 @@
+ package bridge;
+
+-public class Square {
++public class Square extends Shape {
++
++  private double side;
++
++  public Square(Renderer renderer, double side) {
++    super(renderer);
++    this.side = side;
++  }
++
++  @Override
++  public void draw() {
++    renderer.renderSquare(side);
++  }
+ }
+diff --git a/asik2/src/bridge/VectorRenderer.java b/asik2/src/bridge/VectorRenderer.java
+index 7df5488..05a4643 100644
+--- a/asik2/src/bridge/VectorRenderer.java
++++ b/asik2/src/bridge/VectorRenderer.java
+@@ -1,4 +1,14 @@
+ package bridge;
+
+-public class VectorRenderer {
++public class VectorRenderer implements Renderer {
++
++  @Override
++  public void renderCircle(double radius) {
++    System.out.println("Drawing circle as vector, radius: " + radius);
++  }
++
++  @Override
++  public void renderSquare(double side) {
++    System.out.println("Drawing square as vector, side: " + side);
++  }
+ }
+e6dd7d0 Remove unnecessary files from repository
+Ersultan
+Path
+----
+C:\Users\Lenovo\IdeaProjects\sdp2
+true
+C:/Users/Lenovo/IdeaProjects/sdp2
+remote.origin.url https://github.com/ersss228/sdp2.git
+diff.astextplain.textconv=astextplain
+filter.lfs.clean=git-lfs clean -- %f
+filter.lfs.smudge=git-lfs smudge -- %f
+filter.lfs.process=git-lfs filter-process
+filter.lfs.required=true
+http.sslbackend=schannel
+core.autocrlf=true
+core.fscache=true
+core.symlinks=false
+pull.rebase=false
+credential.helper=manager
+credential.https://dev.azure.com.usehttppath=true
+init.defaultbranch=master
+user.name=Lenovo
+user.email=252751@astanait.edu.kz
+core.repositoryformatversion=0
+core.filemode=false
+core.bare=false
+core.logallrefupdates=true
+core.symlinks=false
+core.ignorecase=true
+remote.origin.url=https://github.com/ersss228/sdp2.git
+remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
+branch.main.remote=origin
+branch.main.merge=refs/heads/main
+5.1.26100.9444
+4 октября 2026 г. 2:15:03
+git version 2.52.0.windows.1
+ersultan\lenovo
+    Каталог: C:\Users\Lenovo\IdeaProjects\sdp2\.git
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        20.09.2026      1:32                hooks
+d-----        20.09.2026      1:32                info
+d-----        20.09.2026      1:33                logs
+d-----        04.10.2026      2:04                objects
+d-----        20.09.2026      1:37                refs
+-a----        20.09.2026      1:47             41 COMMIT_EDITMSG
+-a----        20.09.2026      1:37            295 config
+-a----        20.09.2026      1:32             73 description
+-a----        20.09.2026      1:35             21 HEAD
+-a----        04.10.2026      2:15           2969 index
